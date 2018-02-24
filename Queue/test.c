@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include "queue.h"
 
-#define test()  printf("================== [%s]\n", __func__);
-
 int main()
 {
     test_standard();
@@ -16,20 +14,16 @@ void test_standard()
     test();
 
     queue* q = queue_init();
-    
     for (int i = 0; i < 4; i++)
         _queue_push(q, 10 + i);
-  
     _queue_dot_dump(q);
-
     for_each(q->head, &queue_print);
     printf("\n");
-
     for (int j = 0; j < 3; j++)
         _queue_pop(q);
-   
     _queue_dot_dump(q);
     queue_destructor(q);
+    
     test();
 }
 

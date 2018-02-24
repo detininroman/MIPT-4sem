@@ -1,6 +1,8 @@
 #ifndef HEADER_H
 #define HEADER_H
  
+#define test()  printf("================== [%s]\n", __func__);
+
 #define ERR(func) fprintf(stderr, "Error: " #func "\n");
 
 #define _queue_push(q, val) {              \
@@ -43,7 +45,7 @@ queue*  queue_init          ();
 int     queue_empty         (queue* q);
 int     queue_push          (queue* q, int value);
 pop_ret queue_pop           (queue* q);
-void    queue_print          (node* node);
+void    queue_print         (node* node);
 void    queue_destructor    (queue* q);
 int     queue_dot_dump      (queue* q);
 void    queue_node_dot_dump (node* node, FILE* file);
