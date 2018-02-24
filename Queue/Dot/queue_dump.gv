@@ -1,3 +1,4 @@
 digraph graf {
-rankdir="LR";Node_0x55df52fe49c0 [label="100\l "]
+rankdir="LR";Node_0x55a12293e960 [label="[TAIL]
+Node: [0x55a12293e960]\lNext: [(nil)]\lData: 100\l "]
 }

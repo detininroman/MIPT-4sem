@@ -1,5 +1,5 @@
-CC = gcc
-CFLAGS = -Wall
+CC         = gcc
+CFLAGS     = -Wall
 GCOV_FLAGS = -fprofile-arcs -ftest-coverage
 
 all: queue.c test.c queue.h
@@ -12,4 +12,4 @@ queue_gcov: queue.c test.c queue.h
 	$(CC) $(CFLAGS) $(GCOV_FLAGS) queue.c test.c -o queue_gcov
 
 rmgcov:
-	rm queue.c.gcov queue.gcda queue.gcno queue_gcov
+	rm queue.c.gcov queue.gcda queue.gcno queue_gcov test.gcda test.gcno

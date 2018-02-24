@@ -43,13 +43,13 @@ queue*  queue_init          ();
 int     queue_empty         (queue* q);
 int     queue_push          (queue* q, int value);
 pop_ret queue_pop           (queue* q);
-void    queue_dump          (queue* q);
+void    queue_print          (node* node);
 void    queue_destructor    (queue* q);
 int     queue_dot_dump      (queue* q);
 void    queue_node_dot_dump (node* node, FILE* file);
+void    for_each            (node* node, void (*func) (struct node* node));
 
 void    test_standard       ();
-void    test_debug          ();
 void    test_empty_dump     ();
 void    test_empty_pop      ();
 

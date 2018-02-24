@@ -1,8 +1,20 @@
 #include <stdio.h>
 #include "queue.h"
 
+#define test()  printf("================== [%s]\n", __func__);
+
+int main()
+{
+    test_standard();
+    test_empty_dump();
+    test_empty_pop();
+    return 0;
+}
+
 void test_standard()
 {
+    test();
+
     queue* q = queue_init();
     
     for (int i = 0; i < 4; i++)
@@ -10,36 +22,36 @@ void test_standard()
   
     _queue_dot_dump(q);
 
-    queue_dump(q);
-    
+    for_each(q->head, &queue_print);
+    printf("\n");
+
     for (int j = 0; j < 3; j++)
         _queue_pop(q);
    
     _queue_dot_dump(q);
-
     queue_destructor(q);
-}
-
-void test_debug()
-{
-#undef NDEBUG
-    test_standard();
-#define NDEBUG
+    test();
 }
 
 void test_empty_dump()
 {
+    test();
+
     queue* q = queue_init();
     _queue_push(q, 100);
     _queue_dot_dump(q);
     _queue_pop(q);
     _queue_dot_dump(q);
     queue_destructor(q);
+
+    test();
 }
 
 void test_empty_pop()
 {
+    test();
     queue* q = queue_init();
     _queue_pop(q);
     queue_destructor(q);
+    test();
 }
