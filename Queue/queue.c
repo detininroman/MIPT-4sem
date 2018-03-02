@@ -5,9 +5,6 @@
 queue* queue_init()
 {
     queue* temp = calloc (1, sizeof(*temp));
-
-    temp->head  = NULL;
-    temp->tail  = NULL;
     return temp;
 }
 
@@ -23,7 +20,6 @@ int queue_push(queue* q, int value)
        return Q_ERR_MEM_ALLOC;
 
     temp->data = value;
-    temp->next = NULL;
 
     if (!queue_empty(q)) {
         q->tail->next = temp;

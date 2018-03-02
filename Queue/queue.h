@@ -1,6 +1,8 @@
 #ifndef HEADER_H
 #define HEADER_H
  
+typedef int elem_t;
+
 #define test()  printf("================== [%s]\n", __func__);
 
 #define ERR(func) fprintf(stderr, "Error: " #func "\n");
@@ -27,7 +29,7 @@ enum QUEUE_ERRORS{
 };
 
 typedef struct node {
-    int data;
+    elem_t data;
     struct node* next;
 } node;
 
@@ -38,7 +40,7 @@ typedef struct queue {
 
 typedef struct pop_ret {
     int err_num;
-    int value;
+    elem_t value;
 } pop_ret;
 
 queue*  queue_init          ();
