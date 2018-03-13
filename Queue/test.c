@@ -4,7 +4,6 @@
 int main()
 {
     test_standard();
-    test_empty_dump();
     test_empty_pop();
     return 0;
 }
@@ -18,26 +17,14 @@ void test_standard()
     for (int i = 0; i < 24; i++)
         _queue_push(q, 10 + i);
   
-    for_each(q->head, &queue_print);
+    for_each(q, (void*) &queue_print, NULL);
     printf("\n");
     
-    for (int j = 0; j < 22; j++)
+    for (int j = 0; j < 2; j++)
         _queue_pop(q);
     
-    _queue_dot_dump(q);
     queue_destructor(q);
     
-    test();
-}
-
-void test_empty_dump()
-{
-    test();
-
-    queue* q = queue_init();
-    _queue_dot_dump(q);
-    queue_destructor(q);
-
     test();
 }
 

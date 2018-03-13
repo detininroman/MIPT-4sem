@@ -39,7 +39,7 @@ pop_ret queue_pop(queue* q)
     if (!queue_empty(q)) {
         node* temp = q->head;
         ret_struct.value = q->head->data;
-        //printf("Pop: %d\n", ret_struct.value);
+        //printf("Pop: %d^\n", ret_struct.value);
         q->head = q->head->next;
         free (temp);
     } else
@@ -48,9 +48,10 @@ pop_ret queue_pop(queue* q)
     return ret_struct;
 }
 
-void queue_print(node* node)
+int queue_print(node* node, void* ctx)
 {
     printf("[%d]->", node->data);
+    return 0;
 }
 
 void queue_destructor(queue* q)
@@ -64,48 +65,15 @@ void queue_destructor(queue* q)
     free(q);
 }
 
-void for_each(node* node, void (*func) (struct node* node))
+elem_t for_each(queue* q, 
+        elem_t (*act)(struct node* elem, void* ctx), void* ctx)
 {
-    if (node) {
-        for_each(node->next, func);
-        func(node);
+    node* temp = q->head;
+    while (temp) {
+        elem_t res = act(temp, ctx); 
+        if (res)
+            return res;
+        temp = temp->next;
     }
-}
-
-int queue_dot_dump(queue* q)
-{
-    if (queue_empty(q))
-        return Q_ERR_EMPTY_QUEUE;
-
-    FILE* file_ptr = fopen("./Dot/queue_dump.gv", "w");
-
-    fprintf(file_ptr, "digraph graf {\n"
-                    "rankdir=\"LR\";");
-    queue_node_dot_dump(q->head, file_ptr);
-    fprintf(file_ptr, "}");
-
-    fclose(file_ptr);
-
-    system("dot ./Dot/queue_dump.gv -Tpng -o ./Dot/queue_dump.png");
-    system("xdot ./Dot/queue_dump.gv");
-
-    return Q_ERR_OK;
-}
-
-void queue_node_dot_dump (node* node, FILE* file)
-{
-    fprintf(file, "Node_%p [label=\"", node);
-
-    if (!node->next)
-        fprintf(file, "[TAIL]\n");
-
-    fprintf(file, "Node: [%p]\\l"
-                  "Next: [%p]\\l"
-                  "Data: %d\\l \"]\n", 
-                   node, node->next, node->data);
-
-    if (node->next) {
-        fprintf(file, "Node_%p->Node_%p\n", node, node->next);
-        queue_node_dot_dump(node->next, file);
-    }
+    return 0;
 }

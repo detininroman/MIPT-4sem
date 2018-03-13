@@ -3,7 +3,7 @@
  
 typedef int elem_t;
 
-#define test()  printf("================== [%s]\n", __func__);
+#define test() printf("================== [%s]\n", __func__);
 
 #define ERR(func) fprintf(stderr, "Error: " #func "\n");
 
@@ -24,6 +24,7 @@ typedef int elem_t;
 
 enum QUEUE_ERRORS{
     Q_ERR_OK = 0,
+    Q_ERR_PTR,
     Q_ERR_MEM_ALLOC,
     Q_ERR_EMPTY_QUEUE
 };
@@ -47,14 +48,13 @@ queue*  queue_init          ();
 int     queue_empty         (queue* q);
 int     queue_push          (queue* q, int value);
 pop_ret queue_pop           (queue* q);
-void    queue_print         (node* node);
+int     queue_print         (node* node, void* ctx);
 void    queue_destructor    (queue* q);
-int     queue_dot_dump      (queue* q);
-void    queue_node_dot_dump (node* node, FILE* file);
-void    for_each            (node* node, void (*func) (struct node* node));
-
+elem_t  for_each            (queue* q, 
+            int (*act)(struct node* elem, void* ctx), void* ctx);
 void    test_standard       ();
 void    test_empty_dump     ();
 void    test_empty_pop      ();
+int     find_number ();
 
 #endif

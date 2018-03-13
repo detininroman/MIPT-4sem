@@ -1,6 +1,0 @@
-digraph graf {
-rankdir="LR";Node_0x521cbb0 [label="Node: [0x521cbb0]\lNext: [0x521cc00]\lData: 32\l "]
-Node_0x521cbb0->Node_0x521cc00
-Node_0x521cc00 [label="[TAIL]
-Node: [0x521cc00]\lNext: [(nil)]\lData: 33\l "]
-}
