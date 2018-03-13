@@ -39,7 +39,7 @@ pop_ret queue_pop(queue* q)
     if (!queue_empty(q)) {
         node* temp = q->head;
         ret_struct.value = q->head->data;
-        //printf("Pop: %d^\n", ret_struct.value);
+        //printf("Pop: %d\n", ret_struct.value);
         q->head = q->head->next;
         free (temp);
     } else

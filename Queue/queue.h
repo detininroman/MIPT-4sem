@@ -24,7 +24,6 @@ typedef int elem_t;
 
 enum QUEUE_ERRORS{
     Q_ERR_OK = 0,
-    Q_ERR_PTR,
     Q_ERR_MEM_ALLOC,
     Q_ERR_EMPTY_QUEUE
 };
