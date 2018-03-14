@@ -54,6 +54,15 @@ int queue_print(node* node, void* ctx)
     return 0;
 }
 
+int find_number(node* node, void* ctx)
+{
+    int num = atoi((char*) ctx);
+    if (node->data == num)
+        return num;
+    else 
+        return 0;
+}
+
 void queue_destructor(queue* q)
 {
     node* temp = q->head;

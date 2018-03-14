@@ -43,17 +43,17 @@ typedef struct pop_ret {
     elem_t value;
 } pop_ret;
 
-queue*  queue_init          ();
-int     queue_empty         (queue* q);
-int     queue_push          (queue* q, int value);
-pop_ret queue_pop           (queue* q);
-int     queue_print         (node* node, void* ctx);
-void    queue_destructor    (queue* q);
-elem_t  for_each            (queue* q, 
-            int (*act)(struct node* elem, void* ctx), void* ctx);
-void    test_standard       ();
-void    test_empty_dump     ();
-void    test_empty_pop      ();
-int     find_number ();
+queue*  queue_init       ();
+int     queue_empty      (queue* q);
+int     queue_push       (queue* q, int value);
+pop_ret queue_pop        (queue* q);
+int     queue_print      (node* node, void* ctx);
+void    queue_destructor (queue* q);
+elem_t  for_each         (queue* q, 
+        int (*act)(struct node* elem, void* ctx), void* ctx);
+void    test_standard    ();
+void    test_for_each    ();
+void    test_empty_pop   ();
+int     find_number      ();
 
 #endif
