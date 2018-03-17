@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue.h"
-
+ 
 queue* queue_init()
 {
     queue* temp = calloc (1, sizeof(*temp));
+    if (!temp)
+        ERR(calloc);
     return temp;
 }
 
@@ -32,20 +34,18 @@ int queue_push(queue* q, int value)
     return Q_ERR_OK;
 }
 
-pop_ret queue_pop(queue* q)
+int queue_pop(queue* q, int* value)
 {
-    pop_ret ret_struct = {};
    
     if (!queue_empty(q)) {
         node* temp = q->head;
-        ret_struct.value = q->head->data;
-        //printf("Pop: %d\n", ret_struct.value);
+        *value = q->head->data;
+        //printf("Pop: %d\n", *value);
         q->head = q->head->next;
         free (temp);
+        return Q_ERR_OK;
     } else
-        ret_struct.err_num = Q_ERR_EMPTY_QUEUE;
-    
-    return ret_struct;
+        return Q_ERR_EMPTY_QUEUE;
 }
 
 int queue_print(node* node, void* ctx)
@@ -74,12 +74,12 @@ void queue_destructor(queue* q)
     free(q);
 }
 
-elem_t for_each(queue* q, 
-        elem_t (*act)(struct node* elem, void* ctx), void* ctx)
+int for_each(queue* q, 
+        int (*act)(struct node* elem, void* ctx), void* ctx)
 {
     node* temp = q->head;
     while (temp) {
-        elem_t res = act(temp, ctx); 
+        int res = act(temp, ctx); 
         if (res)
             return res;
         temp = temp->next;

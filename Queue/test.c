@@ -38,8 +38,9 @@ void test_standard()
     for_each(q, (void*) &queue_print, NULL);
     printf("\n");
 
+    int pop_value = 0;
     for (int j = 0; j < 2; j++)
-        _queue_pop(q);
+        _queue_pop(q, &pop_value);
     
     queue_destructor(q);
     
@@ -51,7 +52,8 @@ void test_empty_pop()
     test();
 
     queue* q = queue_init();
-    _queue_pop(q);
+    int pop_value = 0;
+    _queue_pop(q, &pop_value);
     queue_destructor(q);
     
     test();
