@@ -30,12 +30,12 @@ void* integrate(void* arg)
     CPU_SET(data->cpu_number, &cpu_set);
 	pthread_setaffinity_np(data->thread_id, sizeof(cpu_set_t), &cpu_set);
 
-    double SUM = 0;
+    double sum = 0;
  
     for (double x = data->from; x < data->to; x += data->dx)
-        SUM += x * x * data->dx; 
+        sum += x * x * data->dx; 
 
-    data->sum = SUM;
+    data->sum = sum;
     return NULL;
 }
 
@@ -47,17 +47,20 @@ int main(int argc, char** argv)
     }
 
     long n_threads = strtol(argv[1], NULL, 10);
+    if (n_threads < 1) {
+        fprintf(stderr, "Error: %s\n", strerror(EINVAL));
+        exit(EXIT_FAILURE);
+    }
+
     int cpu_max = sysconf(_SC_NPROCESSORS_ONLN);
     if (n_threads > cpu_max)
         n_threads = cpu_max;
     
-    double A = 0;    // from
-    double B = 50;   // to
-    double N = 5e+9; // 5*10^9
+    double A = 0;    
+    double B = 50;  
+    double N = 5e+9;
     double dx = (B - A) / N;
     double segment_length = (B - A) / (double) n_threads; 
-    double total = 0;
-
     struct thread_data* data = calloc(n_threads, sizeof(*data));
    
     for (int i = 0; i < n_threads; i++) {
@@ -72,7 +75,8 @@ int main(int argc, char** argv)
 
     for (int i = n_threads; i < cpu_max; i++)
         pthread_create(&data[i].thread_id, NULL, doNothing, NULL);
-
+    
+    double total = 0;
     for (int i = 0; i < n_threads; i++) {
         pthread_join(data[i].thread_id, NULL);
         total += data[i].sum;
