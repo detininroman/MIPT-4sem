@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <sys/stat.h>
 
 struct thread_data {
     double from;
@@ -15,6 +16,44 @@ struct thread_data {
     pthread_t thread_id;
     int cpu_number;
 };
+
+void parseCpuInfo(int** cores, int cpu_max)
+{
+    for (int i = 0; i < cpu_max; i++)
+        for (int j = 0; j < 2; j++)
+            cores[i][j] = -1;
+
+    FILE* src = fopen("info", "w+");
+    system("lscpu --parse=cpu,core > info");
+
+    struct stat buff;
+    stat("info", &buff);
+    long file_size = buff.st_size;
+
+    char* buffer = (char*)calloc(file_size, sizeof(*buffer));
+    fread(buffer, sizeof(char), (size_t)file_size, src);
+    
+    int left = -1;
+    int right = -1;
+    int cnt = 0;
+    buffer = strchr(buffer, '0');
+    while (1)
+    {
+        sscanf(buffer, "%d,%d%n", &left, &right, &cnt);
+        buffer += cnt;
+        if (*buffer == '\0')
+            break;
+       
+        printf("%d,%d\n", left, right);
+       
+        if (cores[right][0] == -1)
+            cores[right][0] = left;
+        else 
+            cores[right][1] = left;
+    }
+    fclose(src);
+    
+}
 
 void* doNothing()
 {
@@ -52,17 +91,23 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-    int cpu_max = sysconf(_SC_NPROCESSORS_ONLN);
+    int cpu_max = sysconf(_SC_NPROCESSORS_ONLN) / 2;
     if (n_threads > cpu_max)
         n_threads = cpu_max;
     
     double A = 0;    
     double B = 50;  
-    double N = 5e+9;
+    double N = 1e+9;
     double dx = (B - A) / N;
     double segment_length = (B - A) / (double) n_threads; 
     struct thread_data* data = calloc(n_threads, sizeof(*data));
    
+    int** cores = (int**)calloc(cpu_max, sizeof(*cores));
+    for (int i = 0; i < cpu_max; i++)
+        cores[i] = (int*) calloc(2, sizeof(*(cores[i])));
+
+    parseCpuInfo(cores, cpu_max);
+     
     for (int i = 0; i < n_threads; i++) {
         data[i].from       = A + segment_length * i;
         data[i].to         = data[i].from + segment_length;
@@ -82,6 +127,12 @@ int main(int argc, char** argv)
         total += data[i].sum;
     }
 
-    free(data);
+    printf("Result: %lg\n", total);
+   
+    for (int i = 0; i < cpu_max; i++)
+        free(cores[i]);
+    free(cores);
+
+   free(data);
     return 0;
 }
