@@ -32,6 +32,7 @@ void parseCpuInfo(int** cores, int cpu_max)
 
     char* buffer = (char*)calloc(file_size, sizeof(*buffer));
     fread(buffer, sizeof(char), (size_t)file_size, src);
+    char* buff_ptr = buffer;
     
     int left = -1;
     int right = -1;
@@ -44,15 +45,14 @@ void parseCpuInfo(int** cores, int cpu_max)
         if (*buffer == '\0')
             break;
        
-        printf("%d,%d\n", left, right);
-       
         if (cores[right][0] == -1)
             cores[right][0] = left;
         else 
             cores[right][1] = left;
     }
+    free(buff_ptr);
     fclose(src);
-    
+    system("rm info");   
 }
 
 void* doNothing()
@@ -111,7 +111,8 @@ int main(int argc, char** argv)
     for (int i = 0; i < n_threads; i++) {
         data[i].from       = A + segment_length * i;
         data[i].to         = data[i].from + segment_length;
-        data[i].cpu_number = i % n_threads;
+        data[i].cpu_number = cores[i][0];
+        printf("%d\n", data[i].cpu_number);
         data[i].dx         = dx;
     }
     
@@ -127,12 +128,11 @@ int main(int argc, char** argv)
         total += data[i].sum;
     }
 
-    printf("Result: %lg\n", total);
+    //printf("Result: %lg\n", total);
    
     for (int i = 0; i < cpu_max; i++)
         free(cores[i]);
     free(cores);
-
-   free(data);
+    free(data);
     return 0;
 }
